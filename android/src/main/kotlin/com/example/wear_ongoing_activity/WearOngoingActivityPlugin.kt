@@ -1,4 +1,4 @@
-package com.example.wear_ongoing_activity
+package dev.rexios.wear_ongoing_activity
 
 import androidx.annotation.NonNull
 
