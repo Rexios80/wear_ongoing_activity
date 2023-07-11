@@ -3,6 +3,7 @@ package dev.rexios.wear_ongoing_activity
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
+import android.text.Html
 import androidx.core.app.NotificationCompat
 import androidx.wear.ongoing.OngoingActivity
 import androidx.wear.ongoing.Status
@@ -38,6 +39,7 @@ class WearOngoingActivityPlugin : FlutterPlugin, MethodCallHandler {
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun start(arguments: Map<String, Any>) {
         val notificationId = arguments["notificationId"] as Int
         val channelId = arguments["channelId"] as String
@@ -55,11 +57,42 @@ class WearOngoingActivityPlugin : FlutterPlugin, MethodCallHandler {
                 }
             }.setOngoing(true)
 
-        val template = arguments["template"] as String?
+        val templates = arguments["templates"] as List<String>
+        val parts = arguments["parts"] as List<Map<String, Any>>
 
-        val ongoingActivityStatus = Status.Builder()
-            // Sets the text used across various surfaces.
-            .addTemplate(mainText).build()
+        val ongoingActivityStatus = Status.Builder().apply {
+            for (template in templates) {
+                addTemplate(Html.fromHtml(template, Html.FROM_HTML_MODE_COMPACT))
+            }
+            for (part in parts) {
+                val type = part["type"]
+                val name = part["name"] as String
+                val statusPart = when (type) {
+                    "text" -> Status.TextPart(part["value"] as String)
+                    "stopwatch", "timer" -> {
+                        val timeZeroMillis = part["timeZeroMillis"] as Long
+                        val pausedAtMillis = part["pausedAtMillis"] as Long? ?: -1
+                        val totalDurationMillis = part["totalDurationMillis"] as Long? ?: -1
+
+                        when (type) {
+                            "stopwatch" -> Status.StopwatchPart(
+                                timeZeroMillis, pausedAtMillis, totalDurationMillis
+                            )
+
+                            "timer" -> Status.TimerPart(
+                                timeZeroMillis, pausedAtMillis, totalDurationMillis
+                            )
+
+                            else -> throw IllegalArgumentException("Unknown type: $type")
+                        }
+                    }
+
+                    else -> throw IllegalArgumentException("Unknown type: $type")
+                }
+
+                addPart(name, statusPart)
+            }
+        }.build()
 
         val animatedIconString = arguments["animatedIcon"] as String?
         val staticIconString = arguments["staticIcon"] as String?
