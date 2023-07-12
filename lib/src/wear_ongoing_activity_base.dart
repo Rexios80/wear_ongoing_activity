@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:wear_ongoing_activity/src/convert.dart';
 import 'package:wear_ongoing_activity/wear_ongoing_activity.dart';
 
 /// Handle an ongoing activity on Wear OS.
@@ -19,15 +20,17 @@ class WearOngoingActivity {
       _channel.invokeMethod('start', {
         'notificationId': notificationId,
         'channelId': channelId,
-        ...status.toJson(),
+        ...jsonMapEncode(status.toJson()),
         'category': category?.name,
         'smallIcon': smallIcon,
         'animatedIcon': animatedIcon,
         'staticIcon': staticIcon,
       });
 
+  /// Update an ongoing activity with a new status
   static Future<void> update(OngoingActivityStatus status) =>
-      _channel.invokeMethod('update', status.toJson());
-  
+      _channel.invokeMethod('update', jsonMapEncode(status.toJson()));
+
+  /// Clear an ongoing activity
   static Future<void> stop() => _channel.invokeMethod('stop');
 }

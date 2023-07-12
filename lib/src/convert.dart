@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:json_annotation/json_annotation.dart';
 
 /// Convert between DateTime and millis
@@ -23,3 +25,7 @@ class DurationMillisConverter extends JsonConverter<Duration, int> {
   @override
   int toJson(Duration object) => object.inMilliseconds;
 }
+
+/// Re-encode a json object to convert all children to the correct types
+Map<String, dynamic> jsonMapEncode(Map<String, dynamic> json) =>
+    jsonDecode(jsonEncode(json));
