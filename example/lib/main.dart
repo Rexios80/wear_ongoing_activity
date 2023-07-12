@@ -1,28 +1,21 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
+
+import 'package:wear_ongoing_activity/wear_ongoing_activity.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  WearOngoingActivity.start(
+    notificationId: 0,
+    channelId: 'idk',
+    status: OngoingActivityStatus(),
+  );
+
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  final _platformVersion = 'Unknown';
-
-  @override
-  void initState() {
-    super.initState();
-    initPlatformState();
-  }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +24,8 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+        body: const Center(
+          child: Text('Hello World'),
         ),
       ),
     );

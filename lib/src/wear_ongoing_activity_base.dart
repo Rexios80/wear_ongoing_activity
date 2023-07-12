@@ -9,7 +9,7 @@ class WearOngoingActivity {
   WearOngoingActivity._();
 
   static Future<void> start({
-    required String notificationId,
+    required int notificationId,
     required String channelId,
     required OngoingActivityStatus status,
     NotificationCategory? category,
