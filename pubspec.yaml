@@ -1,10 +1,10 @@
 name: wear_ongoing_activity
-description: A new Flutter plugin project.
+description: Create and maintain ongoing activity notifications on Wear OS
 version: 0.0.1
 homepage:
 
 environment:
-  sdk: ">=3.0.5 <4.0.0"
+  sdk: ^3.0.0
   flutter: ">=3.3.0"
 
 dependencies:
@@ -22,5 +22,5 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.example.wear_ongoing_activity
+        package: dev.rexios.wear_ongoing_activity
         pluginClass: WearOngoingActivityPlugin
