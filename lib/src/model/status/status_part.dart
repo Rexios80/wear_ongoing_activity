@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:wear_ongoing_activity/src/convert.dart';
-import 'package:wear_ongoing_activity/src/model/part/status_part_type.dart';
-import 'package:wear_ongoing_activity/src/model/part/timer_or_stopwatch_part.dart';
+import 'package:wear_ongoing_activity/src/model/status/status_part_type.dart';
+import 'package:wear_ongoing_activity/src/model/status/timer_or_stopwatch_part.dart';
 
 part 'status_part.g.dart';
 
@@ -15,6 +15,16 @@ abstract class StatusPart {
 
   /// Constructor
   StatusPart({required this.type, required this.name});
+
+  /// From json
+  factory StatusPart.fromJson(Map<String, dynamic> json) {
+    final type = StatusPartType.values.byName(json['type']);
+    return switch (type) {
+      StatusPartType.text => TextPart.fromJson(json),
+      StatusPartType.timer => TimerPart.fromJson(json),
+      StatusPartType.stopwatch => StopwatchPart.fromJson(json),
+    };
+  }
 
   /// To json
   Map<String, dynamic> toJson() => {'type': type.name};

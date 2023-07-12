@@ -20,20 +20,22 @@ Map<String, dynamic> _$TextPartToJson(TextPart instance) => <String, dynamic>{
 
 TimerPart _$TimerPartFromJson(Map<String, dynamic> json) => TimerPart(
       name: json['name'] as String,
-      timeZero:
-          const DateTimeMillisConverter().fromJson(json['timeZero'] as int),
+      timeZero: const DateTimeMillisConverter()
+          .fromJson(json['timeZeroMillis'] as int),
       pausedAt: _$JsonConverterFromJson<int, DateTime>(
-          json['pausedAt'], const DateTimeMillisConverter().fromJson),
+          json['pausedAtMillis'], const DateTimeMillisConverter().fromJson),
       totalDuration: _$JsonConverterFromJson<int, Duration>(
-          json['totalDuration'], const DurationMillisConverter().fromJson),
+          json['totalDurationMillis'],
+          const DurationMillisConverter().fromJson),
     );
 
 Map<String, dynamic> _$TimerPartToJson(TimerPart instance) => <String, dynamic>{
       'name': instance.name,
-      'timeZero': const DateTimeMillisConverter().toJson(instance.timeZero),
-      'pausedAt': _$JsonConverterToJson<int, DateTime>(
+      'timeZeroMillis':
+          const DateTimeMillisConverter().toJson(instance.timeZero),
+      'pausedAtMillis': _$JsonConverterToJson<int, DateTime>(
           instance.pausedAt, const DateTimeMillisConverter().toJson),
-      'totalDuration': _$JsonConverterToJson<int, Duration>(
+      'totalDurationMillis': _$JsonConverterToJson<int, Duration>(
           instance.totalDuration, const DurationMillisConverter().toJson),
     };
 
@@ -52,20 +54,22 @@ Json? _$JsonConverterToJson<Json, Value>(
 StopwatchPart _$StopwatchPartFromJson(Map<String, dynamic> json) =>
     StopwatchPart(
       name: json['name'] as String,
-      timeZero:
-          const DateTimeMillisConverter().fromJson(json['timeZero'] as int),
+      timeZero: const DateTimeMillisConverter()
+          .fromJson(json['timeZeroMillis'] as int),
       pausedAt: _$JsonConverterFromJson<int, DateTime>(
-          json['pausedAt'], const DateTimeMillisConverter().fromJson),
+          json['pausedAtMillis'], const DateTimeMillisConverter().fromJson),
       totalDuration: _$JsonConverterFromJson<int, Duration>(
-          json['totalDuration'], const DurationMillisConverter().fromJson),
+          json['totalDurationMillis'],
+          const DurationMillisConverter().fromJson),
     );
 
 Map<String, dynamic> _$StopwatchPartToJson(StopwatchPart instance) =>
     <String, dynamic>{
       'name': instance.name,
-      'timeZero': const DateTimeMillisConverter().toJson(instance.timeZero),
-      'pausedAt': _$JsonConverterToJson<int, DateTime>(
+      'timeZeroMillis':
+          const DateTimeMillisConverter().toJson(instance.timeZero),
+      'pausedAtMillis': _$JsonConverterToJson<int, DateTime>(
           instance.pausedAt, const DateTimeMillisConverter().toJson),
-      'totalDuration': _$JsonConverterToJson<int, Duration>(
+      'totalDurationMillis': _$JsonConverterToJson<int, Duration>(
           instance.totalDuration, const DurationMillisConverter().toJson),
     };

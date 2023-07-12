@@ -10,11 +10,19 @@ class WearOngoingActivity {
   static Future<void> start({
     required String notificationId,
     required String channelId,
+    required OngoingActivityStatus status,
     NotificationCategory? category,
     String? smallIcon,
-    List<String> templates = const [],
-    List<StatusPart> parts = const [],
-  }) {
-
-  }
+    String? animatedIcon,
+    String? staticIcon,
+  }) =>
+      _channel.invokeMethod('start', {
+        'notificationId': notificationId,
+        'channelId': channelId,
+        'status': status.toJson(),
+        'category': category?.name,
+        'smallIcon': smallIcon,
+        'animatedIcon': animatedIcon,
+        'staticIcon': staticIcon,
+      });
 }
