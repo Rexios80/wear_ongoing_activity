@@ -1,7 +1,24 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:wear_ongoing_activity/src/model/part/status_part_base.dart';
+import 'package:wear_ongoing_activity/src/convert.dart';
+import 'package:wear_ongoing_activity/src/model/part/status_part_type.dart';
+import 'package:wear_ongoing_activity/src/model/part/timer_or_stopwatch_part.dart';
 
 part 'status_part.g.dart';
+
+/// Base class for status parts
+abstract class StatusPart {
+  /// The type of this part
+  final StatusPartType type;
+
+  /// The name of this part
+  final String name;
+
+  /// Constructor
+  StatusPart({required this.type, required this.name});
+
+  /// To json
+  Map<String, dynamic> toJson() => {'type': type.name};
+}
 
 /// A text part
 @JsonSerializable()

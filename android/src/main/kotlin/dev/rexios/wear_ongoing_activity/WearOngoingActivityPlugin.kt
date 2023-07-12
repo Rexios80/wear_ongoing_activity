@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.text.Html
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationCompat.CATEGORY_CALL
 import androidx.wear.ongoing.OngoingActivity
 import androidx.wear.ongoing.Status
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -43,6 +44,7 @@ class WearOngoingActivityPlugin : FlutterPlugin, MethodCallHandler {
     private fun start(arguments: Map<String, Any>) {
         val notificationId = arguments["notificationId"] as Int
         val channelId = arguments["channelId"] as String
+        val category = arguments["category"] as String?
         val smallIconString = arguments["smallIcon"] as String?
 
         val notificationBuilder = NotificationCompat.Builder(context, channelId)
@@ -55,7 +57,8 @@ class WearOngoingActivityPlugin : FlutterPlugin, MethodCallHandler {
                         )
                     )
                 }
-            }.setOngoing(true)
+            }.setCategory(category).setOngoing(true)
+        CATEGORY_CALL
 
         val templates = arguments["templates"] as List<String>
         val parts = arguments["parts"] as List<Map<String, Any>>
@@ -116,6 +119,7 @@ class WearOngoingActivityPlugin : FlutterPlugin, MethodCallHandler {
                 )
             }
         }.setTouchIntent(
+            // Open this app
             PendingIntent.getActivity(
                 context,
                 0,
