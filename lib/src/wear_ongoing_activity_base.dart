@@ -19,10 +19,15 @@ class WearOngoingActivity {
       _channel.invokeMethod('start', {
         'notificationId': notificationId,
         'channelId': channelId,
-        'status': status.toJson(),
+        ...status.toJson(),
         'category': category?.name,
         'smallIcon': smallIcon,
         'animatedIcon': animatedIcon,
         'staticIcon': staticIcon,
       });
+
+  static Future<void> update(OngoingActivityStatus status) =>
+      _channel.invokeMethod('update', status.toJson());
+  
+  static Future<void> stop() => _channel.invokeMethod('stop');
 }

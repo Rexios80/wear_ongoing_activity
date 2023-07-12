@@ -5,7 +5,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.text.Html
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationCompat.CATEGORY_CALL
 import androidx.wear.ongoing.OngoingActivity
 import androidx.wear.ongoing.Status
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -17,9 +16,12 @@ import io.flutter.plugin.common.MethodChannel.Result
 class WearOngoingActivityPlugin : FlutterPlugin, MethodCallHandler {
     private lateinit var context: Context
     private lateinit var channel: MethodChannel
+    private lateinit var notificationManager: NotificationManager
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         context = flutterPluginBinding.applicationContext
+        notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "wear_ongoing_activity")
         channel.setMethodCallHandler(this)
     }
@@ -33,37 +35,17 @@ class WearOngoingActivityPlugin : FlutterPlugin, MethodCallHandler {
         when (call.method) {
             "start" -> start(call.arguments as Map<String, Any>)
             "update" -> update(call.arguments as Map<String, Any>)
-            "pause" -> pause()
-            "resume" -> resume()
             "stop" -> stop()
             else -> result.notImplemented()
         }
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun start(arguments: Map<String, Any>) {
-        val notificationId = arguments["notificationId"] as Int
-        val channelId = arguments["channelId"] as String
-        val category = arguments["category"] as String?
-        val smallIconString = arguments["smallIcon"] as String?
-
-        val notificationBuilder = NotificationCompat.Builder(context, channelId)
-            // TODO: Anything else?
-            .apply {
-                if (smallIconString != null) {
-                    setSmallIcon(
-                        context.resources.getIdentifier(
-                            smallIconString, "drawable", context.packageName
-                        )
-                    )
-                }
-            }.setCategory(category).setOngoing(true)
-        CATEGORY_CALL
-
+    private fun createStatus(arguments: Map<String, Any>): Status {
         val templates = arguments["templates"] as List<String>
         val parts = arguments["parts"] as List<Map<String, Any>>
 
-        val ongoingActivityStatus = Status.Builder().apply {
+        return Status.Builder().apply {
             for (template in templates) {
                 addTemplate(Html.fromHtml(template, Html.FROM_HTML_MODE_COMPACT))
             }
@@ -97,6 +79,28 @@ class WearOngoingActivityPlugin : FlutterPlugin, MethodCallHandler {
                 addPart(name, statusPart)
             }
         }.build()
+    }
+
+
+    private fun start(arguments: Map<String, Any>) {
+        val notificationId = arguments["notificationId"] as Int
+        val channelId = arguments["channelId"] as String
+        val category = arguments["category"] as String?
+        val smallIconString = arguments["smallIcon"] as String?
+
+        val notificationBuilder = NotificationCompat.Builder(context, channelId)
+            // TODO: Anything else?
+            .apply {
+                if (smallIconString != null) {
+                    setSmallIcon(
+                        context.resources.getIdentifier(
+                            smallIconString, "drawable", context.packageName
+                        )
+                    )
+                }
+            }.setCategory(category).setOngoing(true)
+
+        val ongoingActivityStatus = createStatus(arguments)
 
         val animatedIconString = arguments["animatedIcon"] as String?
         val staticIconString = arguments["staticIcon"] as String?
@@ -128,19 +132,15 @@ class WearOngoingActivityPlugin : FlutterPlugin, MethodCallHandler {
             )
         ).setStatus(ongoingActivityStatus).build().apply(context)
 
-        val notificationManager =
-            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(notificationId, notificationBuilder.build())
-
     }
 
     private fun update(arguments: Map<String, Any>) {
-
+        OngoingActivity.recoverOngoingActivity(context)!!.update(context, createStatus(arguments))
     }
 
-    private fun pause() {}
-
-    private fun resume() {}
-
-    private fun stop() {}
+    private fun stop() {
+        val notificationId = OngoingActivity.recoverOngoingActivity(context)!!.notificationId
+        notificationManager.cancel(notificationId)
+    }
 }
