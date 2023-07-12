@@ -1,5 +1,6 @@
 package dev.rexios.wear_ongoing_activity
 
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
@@ -14,6 +15,8 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 
 class WearOngoingActivityPlugin : FlutterPlugin, MethodCallHandler {
+    private val channelId = "ongoing_activity"
+
     private lateinit var context: Context
     private lateinit var channel: MethodChannel
     private lateinit var notificationManager: NotificationManager
@@ -36,8 +39,10 @@ class WearOngoingActivityPlugin : FlutterPlugin, MethodCallHandler {
             "start" -> start(call.arguments as Map<String, Any>)
             "update" -> update(call.arguments as Map<String, Any>)
             "stop" -> stop()
-            else -> result.notImplemented()
+            else -> return result.notImplemented()
         }
+
+        result.success(null)
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -83,42 +88,40 @@ class WearOngoingActivityPlugin : FlutterPlugin, MethodCallHandler {
 
 
     private fun start(arguments: Map<String, Any>) {
+        // TODO: Allow customization of this?
+        val channel = NotificationChannel(
+            channelId, "Ongoing Activity", NotificationManager.IMPORTANCE_DEFAULT
+        )
+        notificationManager.createNotificationChannel(channel)
+
         val notificationId = arguments["notificationId"] as Int
-        val channelId = arguments["channelId"] as String
         val category = arguments["category"] as String?
-        val smallIconString = arguments["smallIcon"] as String?
+        val smallIconString = arguments["smallIcon"] as String
 
         val notificationBuilder = NotificationCompat.Builder(context, channelId)
             // TODO: Anything else?
-            .apply {
-                if (smallIconString != null) {
-                    setSmallIcon(
-                        context.resources.getIdentifier(
-                            smallIconString, "drawable", context.packageName
-                        )
-                    )
-                }
-            }.setCategory(category).setOngoing(true)
+            .setSmallIcon(
+                context.resources.getIdentifier(
+                    smallIconString, "drawable", context.packageName
+                )
+            ).setCategory(category).setOngoing(true)
 
         val ongoingActivityStatus = createStatus(arguments)
 
         val animatedIconString = arguments["animatedIcon"] as String?
-        val staticIconString = arguments["staticIcon"] as String?
+        val staticIconString = arguments["staticIcon"] as String
 
         OngoingActivity.Builder(
             context, notificationId, notificationBuilder
+        ).setStaticIcon(
+            context.resources.getIdentifier(
+                staticIconString, "drawable", context.packageName
+            )
         ).apply {
             if (animatedIconString != null) {
                 setAnimatedIcon(
                     context.resources.getIdentifier(
                         animatedIconString, "drawable", context.packageName
-                    )
-                )
-            }
-            if (staticIconString != null) {
-                setStaticIcon(
-                    context.resources.getIdentifier(
-                        staticIconString, "drawable", context.packageName
                     )
                 )
             }

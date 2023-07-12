@@ -11,11 +11,11 @@ class WearOngoingActivity {
   static Future<void> start({
     required int notificationId,
     required String channelId,
+    required String smallIcon,
+    required String staticIcon,
     required OngoingActivityStatus status,
     NotificationCategory? category,
-    String? smallIcon,
     String? animatedIcon,
-    String? staticIcon,
   }) =>
       _channel.invokeMethod('start', {
         'notificationId': notificationId,

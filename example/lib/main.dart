@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 
 import 'package:wear_ongoing_activity/wear_ongoing_activity.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  WearOngoingActivity.start(
-    notificationId: 0,
+  await WearOngoingActivity.start(
+    notificationId: 12345,
     channelId: 'idk',
     status: OngoingActivityStatus(),
+    staticIcon: 'ic_launcher',
+    smallIcon: 'ic_launcher',
   );
 
   runApp(const MyApp());
