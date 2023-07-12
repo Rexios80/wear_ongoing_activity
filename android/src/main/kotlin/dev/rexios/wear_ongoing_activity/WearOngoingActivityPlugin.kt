@@ -68,18 +68,19 @@ class WearOngoingActivityPlugin : FlutterPlugin, MethodCallHandler {
                 val type = part["type"]
                 val name = part["name"] as String
                 val statusPart = when (type) {
-                    "text" -> Status.TextPart(part["value"] as String)
-                    "stopwatch", "timer" -> {
+                    "text" -> Status.TextPart(part["text"] as String)
+                    "timer", "stopwatch" -> {
                         val timeZeroMillis = part["timeZeroMillis"] as Long
                         val pausedAtMillis = part["pausedAtMillis"] as Long? ?: -1
                         val totalDurationMillis = part["totalDurationMillis"] as Long? ?: -1
 
                         when (type) {
-                            "stopwatch" -> Status.StopwatchPart(
+
+                            "timer" -> Status.TimerPart(
                                 timeZeroMillis, pausedAtMillis, totalDurationMillis
                             )
 
-                            "timer" -> Status.TimerPart(
+                            "stopwatch" -> Status.StopwatchPart(
                                 timeZeroMillis, pausedAtMillis, totalDurationMillis
                             )
 
