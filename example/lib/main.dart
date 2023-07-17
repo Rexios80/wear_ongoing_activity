@@ -8,7 +8,15 @@ void main() async {
   await WearOngoingActivity.start(
     notificationId: 12345,
     channelId: 'idk',
-    status: OngoingActivityStatus(),
+    status: OngoingActivityStatus(
+      templates: [
+        'Hello World',
+      ],
+      // parts: [
+      //   TextPart(name: 'type', text: 'Hello World'),
+      //   StopwatchPart(name: 'time', timeZero: DateTime.now())
+      // ],
+    ),
     staticIcon: 'ic_launcher',
     smallIcon: 'ic_launcher',
   );

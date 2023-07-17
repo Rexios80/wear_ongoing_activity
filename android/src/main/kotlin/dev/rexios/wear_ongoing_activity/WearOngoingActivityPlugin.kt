@@ -3,9 +3,15 @@ package dev.rexios.wear_ongoing_activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
+import android.os.Binder
+import android.os.IBinder
 import android.text.Html
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.LifecycleService
 import androidx.wear.ongoing.OngoingActivity
 import androidx.wear.ongoing.Status
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -15,18 +21,29 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 
 class WearOngoingActivityPlugin : FlutterPlugin, MethodCallHandler {
-    private val channelId = "ongoing_activity"
-
-    private lateinit var context: Context
     private lateinit var channel: MethodChannel
-    private lateinit var notificationManager: NotificationManager
+
+    private var ongoingActivityService: OngoingActivityService? = null
+    private val ongoingActivityServiceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName, service: IBinder) {
+            val binder = service as OngoingActivityService.LocalBinder
+            ongoingActivityService = binder.ongoingActivityService
+        }
+
+        override fun onServiceDisconnected(name: ComponentName) {
+            ongoingActivityService = null
+        }
+    }
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        context = flutterPluginBinding.applicationContext
-        notificationManager =
-            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "wear_ongoing_activity")
         channel.setMethodCallHandler(this)
+
+        val context = flutterPluginBinding.applicationContext
+        val serviceIntent = Intent(context, OngoingActivityService::class.java)
+        context.bindService(
+            serviceIntent, ongoingActivityServiceConnection, Context.BIND_AUTO_CREATE
+        )
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
@@ -36,13 +53,31 @@ class WearOngoingActivityPlugin : FlutterPlugin, MethodCallHandler {
     @Suppress("UNCHECKED_CAST")
     override fun onMethodCall(call: MethodCall, result: Result) {
         when (call.method) {
-            "start" -> start(call.arguments as Map<String, Any>)
-            "update" -> update(call.arguments as Map<String, Any>)
-            "stop" -> stop()
+            "start" -> ongoingActivityService!!.start(call.arguments as Map<String, Any>)
+            "update" -> ongoingActivityService!!.update(call.arguments as Map<String, Any>)
+            "stop" -> ongoingActivityService!!.stop()
             else -> return result.notImplemented()
         }
 
         result.success(null)
+    }
+}
+
+class OngoingActivityService : LifecycleService() {
+    private val channelId = "ongoing_activity"
+    private val localBinder = LocalBinder()
+
+    private val notificationManager =
+        getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+    inner class LocalBinder : Binder() {
+        internal val ongoingActivityService: OngoingActivityService
+            get() = this@OngoingActivityService
+    }
+
+    override fun onBind(intent: Intent): IBinder {
+        super.onBind(intent)
+        return localBinder
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -86,23 +121,23 @@ class WearOngoingActivityPlugin : FlutterPlugin, MethodCallHandler {
         }.build()
     }
 
-
-    private fun start(arguments: Map<String, Any>) {
+    fun start(arguments: Map<String, Any>) {
         // TODO: Allow customization of this?
         val channel = NotificationChannel(
             channelId, "Ongoing Activity", NotificationManager.IMPORTANCE_DEFAULT
         )
         notificationManager.createNotificationChannel(channel)
 
+
         val notificationId = arguments["notificationId"] as Int
         val category = arguments["category"] as String?
         val smallIconString = arguments["smallIcon"] as String
 
-        val notificationBuilder = NotificationCompat.Builder(context, channelId)
+        val notificationBuilder = NotificationCompat.Builder(this, channelId)
             // TODO: Anything else?
             .setSmallIcon(
-                context.resources.getIdentifier(
-                    smallIconString, "drawable", context.packageName
+                applicationContext.resources.getIdentifier(
+                    smallIconString, "drawable", applicationContext.packageName
                 )
             ).setCategory(category).setOngoing(true)
 
@@ -112,38 +147,37 @@ class WearOngoingActivityPlugin : FlutterPlugin, MethodCallHandler {
         val staticIconString = arguments["staticIcon"] as String
 
         OngoingActivity.Builder(
-            context, notificationId, notificationBuilder
+            this, notificationId, notificationBuilder
         ).setStaticIcon(
-            context.resources.getIdentifier(
-                staticIconString, "drawable", context.packageName
+            applicationContext.resources.getIdentifier(
+                staticIconString, "drawable", applicationContext.packageName
             )
         ).apply {
             if (animatedIconString != null) {
                 setAnimatedIcon(
-                    context.resources.getIdentifier(
-                        animatedIconString, "drawable", context.packageName
+                    applicationContext.resources.getIdentifier(
+                        animatedIconString, "drawable", applicationContext.packageName
                     )
                 )
             }
         }.setTouchIntent(
             // Open this app
             PendingIntent.getActivity(
-                context,
+                this,
                 0,
-                context.packageManager.getLaunchIntentForPackage(context.packageName),
+                applicationContext.packageManager.getLaunchIntentForPackage(applicationContext.packageName),
                 PendingIntent.FLAG_IMMUTABLE
             )
-        ).setStatus(ongoingActivityStatus).build().apply(context)
+        ).setStatus(ongoingActivityStatus).build().apply(this)
 
-        notificationManager.notify(notificationId, notificationBuilder.build())
+        startForeground(notificationId, notificationBuilder.build())
     }
 
-    private fun update(arguments: Map<String, Any>) {
-        OngoingActivity.recoverOngoingActivity(context)!!.update(context, createStatus(arguments))
+    fun update(arguments: Map<String, Any>) {
+        OngoingActivity.recoverOngoingActivity(this)!!.update(this, createStatus(arguments))
     }
 
-    private fun stop() {
-        val notificationId = OngoingActivity.recoverOngoingActivity(context)!!.notificationId
-        notificationManager.cancel(notificationId)
+    fun stop() {
+        stopForeground(true)
     }
 }
