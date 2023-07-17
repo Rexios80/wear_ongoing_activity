@@ -30,7 +30,7 @@
         </activity>
 
         <service
-            android:name="dev.rexios.wear_ongoing_activity.WearOngoingActivityPlugin"
+            android:name="dev.rexios.wear_ongoing_activity.OngoingActivityService"
             android:exported="false"
             android:stopWithTask="true" />
 

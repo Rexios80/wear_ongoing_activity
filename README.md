@@ -20,7 +20,7 @@ samples, guidance on mobile development, and a full API reference.
 <application>
     ...
     <service
-        android:name="dev.rexios.wear_ongoing_activity.WearOngoingActivityPlugin"
+        android:name="dev.rexios.wear_ongoing_activity.OngoingActivityService"
         android:exported="false"
         android:foregroundServiceType="location|mediaPlayback|... (optional)"
         android:stopWithTask="true" />

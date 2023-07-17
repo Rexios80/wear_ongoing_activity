@@ -67,12 +67,17 @@ class OngoingActivityService : LifecycleService() {
     private val channelId = "ongoing_activity"
     private val localBinder = LocalBinder()
 
-    private val notificationManager =
-        getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    private lateinit var notificationManager: NotificationManager
 
     inner class LocalBinder : Binder() {
         internal val ongoingActivityService: OngoingActivityService
             get() = this@OngoingActivityService
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+
+        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     }
 
     override fun onBind(intent: Intent): IBinder {
