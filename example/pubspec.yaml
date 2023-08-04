@@ -9,6 +9,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  permission_handler: ^10.4.3
   wear_ongoing_activity:
     # When depending on this package from a real application you should use:
     #   wear_ongoing_activity: ^x.y.z

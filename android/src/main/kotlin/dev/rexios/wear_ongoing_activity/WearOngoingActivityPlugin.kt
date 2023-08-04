@@ -9,7 +9,6 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Binder
 import android.os.IBinder
-import android.text.Html
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.wear.ongoing.OngoingActivity
@@ -92,7 +91,7 @@ class OngoingActivityService : LifecycleService() {
 
         return Status.Builder().apply {
             for (template in templates) {
-                addTemplate(Html.fromHtml(template, Html.FROM_HTML_MODE_COMPACT))
+                addTemplate(template)
             }
             for (part in parts) {
                 val type = part["type"]

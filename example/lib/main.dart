@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'package:wear_ongoing_activity/wear_ongoing_activity.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Permission.notification.request();
 
   await WearOngoingActivity.start(
     notificationId: 12345,
@@ -12,10 +15,10 @@ void main() async {
       templates: [
         'Hello World',
       ],
-      // parts: [
-      //   TextPart(name: 'type', text: 'Hello World'),
-      //   StopwatchPart(name: 'time', timeZero: DateTime.now())
-      // ],
+      parts: [
+        TextPart(name: 'type', text: 'Hello World'),
+        StopwatchPart(name: 'time', timeZero: DateTime.now())
+      ],
     ),
     staticIcon: 'ic_launcher',
     smallIcon: 'ic_launcher',
