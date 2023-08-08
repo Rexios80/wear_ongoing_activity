@@ -10,6 +10,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Binder
 import android.os.IBinder
+import android.os.SystemClock
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.wear.ongoing.OngoingActivity
@@ -99,9 +100,13 @@ class OngoingActivityService : LifecycleService() {
                 val statusPart = when (type) {
                     "text" -> Status.TextPart(part["text"] as String)
                     "timer", "stopwatch" -> {
-                        val timeZeroMillis = part["timeZeroMillis"] as Long
-                        val pausedAtMillis = part["pausedAtMillis"] as Long? ?: -1
-                        val totalDurationMillis = part["totalDurationMillis"] as Long? ?: -1
+                        val bootMillis = System.currentTimeMillis() - SystemClock.elapsedRealtime()
+
+                        val timeZeroMillis = part["timeZeroMillis"] as Long - bootMillis
+                        val pausedAtMillis =
+                            (part["pausedAtMillis"] as Long?)?.minus(bootMillis) ?: -1
+                        val totalDurationMillis =
+                            (part["totalDurationMillis"] as Long?)?.minus(bootMillis) ?: -1
 
                         when (type) {
 
