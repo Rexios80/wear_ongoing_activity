@@ -17,7 +17,7 @@ class OngoingActivityStatus {
   final List<StatusPart> parts;
 
   /// Constructor
-  OngoingActivityStatus({this.templates = const [], this.parts = const []});
+  OngoingActivityStatus({required this.templates, required this.parts});
 
   /// To json
   Map<String, dynamic> toJson() => _$OngoingActivityStatusToJson(this);

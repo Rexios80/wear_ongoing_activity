@@ -17,7 +17,7 @@ void main() async {
         '#type#: #time#',
       ],
       parts: [
-        TextPart(name: 'type', text: 'thonk'),
+        TextPart(name: 'type', text: 'stuff'),
         StopwatchPart(name: 'time', timeZero: DateTime.now())
       ],
     ),
