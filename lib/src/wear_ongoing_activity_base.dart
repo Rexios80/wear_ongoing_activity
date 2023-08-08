@@ -9,6 +9,15 @@ class WearOngoingActivity {
   WearOngoingActivity._();
 
   /// Start an ongoing activity
+  /// 
+  /// - [channelId]: The id of the notification channel
+  /// - [channelName]: The name of the notification channel
+  /// - [notificationId]: The id of the notification
+  /// - [category]: The category of the notification
+  /// - [smallIcon]: The name of the small icon resource
+  /// - [staticIcon]: The name of the static icon resource
+  /// - [animatedIcon]: The name of the animated icon resource
+  /// - [status]: The status of the ongoing activity
   static Future<void> start({
     required String channelId,
     required String channelName,

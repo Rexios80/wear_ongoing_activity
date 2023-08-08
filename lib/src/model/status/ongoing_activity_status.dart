@@ -7,6 +7,10 @@ part 'ongoing_activity_status.g.dart';
 @JsonSerializable(createFactory: false)
 class OngoingActivityStatus {
   /// The templates for this ongoing activity
+  ///
+  /// Status [parts] can be substituted into these templates using hashtags.
+  /// For example: `#type#: #time#` will substitute in the [parts] named
+  /// `type` and `time`.
   final List<String> templates;
 
   /// The parts for this ongoing activity
