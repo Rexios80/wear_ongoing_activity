@@ -8,23 +8,26 @@ class WearOngoingActivity {
 
   WearOngoingActivity._();
 
+  /// Start an ongoing activity
   static Future<void> start({
-    required int notificationId,
     required String channelId,
+    required String channelName,
+    required int notificationId,
+    NotificationCategory? category,
     required String smallIcon,
     required String staticIcon,
-    required OngoingActivityStatus status,
-    NotificationCategory? category,
     String? animatedIcon,
+    required OngoingActivityStatus status,
   }) =>
       _channel.invokeMethod('start', {
-        'notificationId': notificationId,
         'channelId': channelId,
-        ...jsonMapEncode(status.toJson()),
+        'channelName': channelName,
+        'notificationId': notificationId,
         'category': category?.name,
         'smallIcon': smallIcon,
-        'animatedIcon': animatedIcon,
         'staticIcon': staticIcon,
+        'animatedIcon': animatedIcon,
+        ...jsonMapEncode(status.toJson()),
       });
 
   /// Update an ongoing activity with a new status

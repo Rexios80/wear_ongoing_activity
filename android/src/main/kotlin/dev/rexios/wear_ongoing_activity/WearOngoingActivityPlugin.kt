@@ -1,5 +1,6 @@
 package dev.rexios.wear_ongoing_activity
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -63,7 +64,6 @@ class WearOngoingActivityPlugin : FlutterPlugin, MethodCallHandler {
 }
 
 class OngoingActivityService : LifecycleService() {
-    private val channelId = "ongoing_activity"
     private val localBinder = LocalBinder()
 
     private lateinit var notificationManager: NotificationManager
@@ -125,13 +125,14 @@ class OngoingActivityService : LifecycleService() {
         }.build()
     }
 
+    @SuppressLint("DiscouragedApi")
     fun start(arguments: Map<String, Any>) {
-        // TODO: Allow customization of this?
+        val channelId = arguments["channelId"] as String
+        val channelName = arguments["channelName"] as String
         val channel = NotificationChannel(
-            channelId, "Ongoing Activity", NotificationManager.IMPORTANCE_DEFAULT
+            channelId, channelName, NotificationManager.IMPORTANCE_DEFAULT
         )
         notificationManager.createNotificationChannel(channel)
-
 
         val notificationId = arguments["notificationId"] as Int
         val category = arguments["category"] as String?
@@ -147,8 +148,8 @@ class OngoingActivityService : LifecycleService() {
 
         val ongoingActivityStatus = createStatus(arguments)
 
-        val animatedIconString = arguments["animatedIcon"] as String?
         val staticIconString = arguments["staticIcon"] as String
+        val animatedIconString = arguments["animatedIcon"] as String?
 
         OngoingActivity.Builder(
             this, notificationId, notificationBuilder

@@ -4,7 +4,7 @@ import 'package:wear_ongoing_activity/wear_ongoing_activity.dart';
 part 'ongoing_activity_status.g.dart';
 
 /// The status of the ongoing activity
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class OngoingActivityStatus {
   /// The templates for this ongoing activity
   final List<String> templates;
@@ -14,10 +14,6 @@ class OngoingActivityStatus {
 
   /// Constructor
   OngoingActivityStatus({this.templates = const [], this.parts = const []});
-
-  /// From json
-  factory OngoingActivityStatus.fromJson(Map<String, dynamic> json) =>
-      _$OngoingActivityStatusFromJson(json);
 
   /// To json
   Map<String, dynamic> toJson() => _$OngoingActivityStatusToJson(this);

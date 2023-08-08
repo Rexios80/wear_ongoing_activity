@@ -9,14 +9,15 @@ void main() async {
   await Permission.notification.request();
 
   await WearOngoingActivity.start(
+    channelId: 'ongoing_activity',
+    channelName: 'Ongoing Activity',
     notificationId: 12345,
-    channelId: 'idk',
     status: OngoingActivityStatus(
       templates: [
-        'Hello World',
+        '#type#: #time#',
       ],
       parts: [
-        TextPart(name: 'type', text: 'Hello World'),
+        TextPart(name: 'type', text: 'thonk'),
         StopwatchPart(name: 'time', timeZero: DateTime.now())
       ],
     ),

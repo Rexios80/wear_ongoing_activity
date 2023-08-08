@@ -8,19 +8,6 @@ part of 'ongoing_activity_status.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-OngoingActivityStatus _$OngoingActivityStatusFromJson(
-        Map<String, dynamic> json) =>
-    OngoingActivityStatus(
-      templates: (json['templates'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-      parts: (json['parts'] as List<dynamic>?)
-              ?.map((e) => StatusPart.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const [],
-    );
-
 Map<String, dynamic> _$OngoingActivityStatusToJson(
         OngoingActivityStatus instance) =>
     <String, dynamic>{

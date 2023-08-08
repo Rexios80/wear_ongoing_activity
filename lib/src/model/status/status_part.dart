@@ -16,78 +16,58 @@ abstract class StatusPart {
   /// Constructor
   StatusPart({required this.type, required this.name});
 
-  /// From json
-  factory StatusPart.fromJson(Map<String, dynamic> json) {
-    final type = StatusPartType.values.byName(json['type']);
-    return switch (type) {
-      StatusPartType.text => TextPart.fromJson(json),
-      StatusPartType.timer => TimerPart.fromJson(json),
-      StatusPartType.stopwatch => StopwatchPart.fromJson(json),
-    };
-  }
-
   /// To json
-  Map<String, dynamic> toJson() => {'type': type.name};
+  Map<String, dynamic> toJson();
 }
 
 /// A text part
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class TextPart extends StatusPart {
   /// The text
   final String text;
 
   /// Constructor
-  TextPart({required super.name, required this.text})
-      : super(type: StatusPartType.text);
-
-  /// From json
-  factory TextPart.fromJson(Map<String, dynamic> json) =>
-      _$TextPartFromJson(json);
+  TextPart({
+    super.type = StatusPartType.text,
+    required super.name,
+    required this.text,
+  }) : assert(type == StatusPartType.text);
 
   /// To json
   @override
-  Map<String, dynamic> toJson() =>
-      {...super.toJson(), ..._$TextPartToJson(this)};
+  Map<String, dynamic> toJson() => _$TextPartToJson(this);
 }
 
 /// A timer part
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class TimerPart extends TimerOrStopwatchPart {
   /// Constructor
   TimerPart({
+    super.type = StatusPartType.timer,
     required super.name,
     required super.timeZero,
     super.pausedAt,
     super.totalDuration,
-  }) : super(type: StatusPartType.timer);
-
-  /// From json
-  factory TimerPart.fromJson(Map<String, dynamic> json) =>
-      _$TimerPartFromJson(json);
+  }) : assert(type == StatusPartType.timer);
 
   /// To json
   @override
-  Map<String, dynamic> toJson() =>
-      {...super.toJson(), ..._$TimerPartToJson(this)};
+  Map<String, dynamic> toJson() => _$TimerPartToJson(this);
 }
 
 /// A stopwatch part
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class StopwatchPart extends TimerOrStopwatchPart {
   /// Constructor
   StopwatchPart({
+    super.type = StatusPartType.stopwatch,
     required super.name,
     required super.timeZero,
     super.pausedAt,
     super.totalDuration,
-  }) : super(type: StatusPartType.stopwatch);
-
-  /// From json
-  factory StopwatchPart.fromJson(Map<String, dynamic> json) =>
-      _$StopwatchPartFromJson(json);
+  }) : assert(type == StatusPartType.stopwatch);
 
   /// To json
   @override
-  Map<String, dynamic> toJson() =>
-      {...super.toJson(), ..._$StopwatchPartToJson(this)};
+  Map<String, dynamic> toJson() => _$StopwatchPartToJson(this);
 }

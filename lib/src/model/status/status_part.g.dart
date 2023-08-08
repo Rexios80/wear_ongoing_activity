@@ -8,28 +8,20 @@ part of 'status_part.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-TextPart _$TextPartFromJson(Map<String, dynamic> json) => TextPart(
-      name: json['name'] as String,
-      text: json['text'] as String,
-    );
-
 Map<String, dynamic> _$TextPartToJson(TextPart instance) => <String, dynamic>{
+      'type': _$StatusPartTypeEnumMap[instance.type]!,
       'name': instance.name,
       'text': instance.text,
     };
 
-TimerPart _$TimerPartFromJson(Map<String, dynamic> json) => TimerPart(
-      name: json['name'] as String,
-      timeZero: const DateTimeMillisConverter()
-          .fromJson(json['timeZeroMillis'] as int),
-      pausedAt: _$JsonConverterFromJson<int, DateTime>(
-          json['pausedAtMillis'], const DateTimeMillisConverter().fromJson),
-      totalDuration: _$JsonConverterFromJson<int, Duration>(
-          json['totalDurationMillis'],
-          const DurationMillisConverter().fromJson),
-    );
+const _$StatusPartTypeEnumMap = {
+  StatusPartType.text: 'text',
+  StatusPartType.timer: 'timer',
+  StatusPartType.stopwatch: 'stopwatch',
+};
 
 Map<String, dynamic> _$TimerPartToJson(TimerPart instance) => <String, dynamic>{
+      'type': _$StatusPartTypeEnumMap[instance.type]!,
       'name': instance.name,
       'timeZeroMillis':
           const DateTimeMillisConverter().toJson(instance.timeZero),
@@ -39,32 +31,15 @@ Map<String, dynamic> _$TimerPartToJson(TimerPart instance) => <String, dynamic>{
           instance.totalDuration, const DurationMillisConverter().toJson),
     };
 
-Value? _$JsonConverterFromJson<Json, Value>(
-  Object? json,
-  Value? Function(Json json) fromJson,
-) =>
-    json == null ? null : fromJson(json as Json);
-
 Json? _$JsonConverterToJson<Json, Value>(
   Value? value,
   Json? Function(Value value) toJson,
 ) =>
     value == null ? null : toJson(value);
 
-StopwatchPart _$StopwatchPartFromJson(Map<String, dynamic> json) =>
-    StopwatchPart(
-      name: json['name'] as String,
-      timeZero: const DateTimeMillisConverter()
-          .fromJson(json['timeZeroMillis'] as int),
-      pausedAt: _$JsonConverterFromJson<int, DateTime>(
-          json['pausedAtMillis'], const DateTimeMillisConverter().fromJson),
-      totalDuration: _$JsonConverterFromJson<int, Duration>(
-          json['totalDurationMillis'],
-          const DurationMillisConverter().fromJson),
-    );
-
 Map<String, dynamic> _$StopwatchPartToJson(StopwatchPart instance) =>
     <String, dynamic>{
+      'type': _$StatusPartTypeEnumMap[instance.type]!,
       'name': instance.name,
       'timeZeroMillis':
           const DateTimeMillisConverter().toJson(instance.timeZero),
