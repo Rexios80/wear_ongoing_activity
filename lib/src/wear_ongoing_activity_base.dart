@@ -9,20 +9,21 @@ class WearOngoingActivity {
   WearOngoingActivity._();
 
   /// Start an ongoing activity
-  /// 
+  ///
   /// - [channelId]: The id of the notification channel
   /// - [channelName]: The name of the notification channel
   /// - [notificationId]: The id of the notification
   /// - [category]: The category of the notification
-  /// - [smallIcon]: The name of the small icon resource
-  /// - [staticIcon]: The name of the static icon resource
-  /// - [animatedIcon]: The name of the animated icon resource
+  /// - [smallIcon]: The name of the small icon resource for the notification
+  /// - [staticIcon]: The name of the icon resource to show on the deactivated watch face
+  /// - [animatedIcon]: The name of the icon resource to show on the activated watch face
   /// - [status]: The status of the ongoing activity
   static Future<void> start({
     required String channelId,
     required String channelName,
     required int notificationId,
-    NotificationCategory? category,
+    required NotificationCategory category,
+    required Set<ForegroundServiceType> foregroundServiceTypes,
     required String smallIcon,
     required String staticIcon,
     String? animatedIcon,
@@ -32,7 +33,9 @@ class WearOngoingActivity {
         'channelId': channelId,
         'channelName': channelName,
         'notificationId': notificationId,
-        'category': category?.name,
+        'category': category.value,
+        'foregroundServiceType':
+            foregroundServiceTypes.fold(0, (v, e) => v | e.value),
         'smallIcon': smallIcon,
         'staticIcon': staticIcon,
         'animatedIcon': animatedIcon,

@@ -1,4 +1,5 @@
 export 'src/wear_ongoing_activity_base.dart';
+export 'src/model/foreground_service_type.dart';
 export 'src/model/notification_category.dart';
 
 export 'src/model/status/ongoing_activity_status.dart';

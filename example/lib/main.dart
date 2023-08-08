@@ -12,6 +12,13 @@ void main() async {
     channelId: 'ongoing_activity',
     channelName: 'Ongoing Activity',
     notificationId: 12345,
+    category: NotificationCategory.workout,
+    foregroundServiceTypes: {
+      ForegroundServiceType.health,
+      ForegroundServiceType.remoteMessaging,
+    },
+    smallIcon: 'ic_launcher',
+    staticIcon: 'ic_launcher',
     status: OngoingActivityStatus(
       templates: [
         '#type#: #time#',
@@ -21,8 +28,6 @@ void main() async {
         StopwatchPart(name: 'time', timeZero: DateTime.now())
       ],
     ),
-    staticIcon: 'ic_launcher',
-    smallIcon: 'ic_launcher',
   );
 
   runApp(const MyApp());

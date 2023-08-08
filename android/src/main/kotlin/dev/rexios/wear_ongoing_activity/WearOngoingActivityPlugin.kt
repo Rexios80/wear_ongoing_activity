@@ -140,11 +140,10 @@ class OngoingActivityService : LifecycleService() {
         notificationManager.createNotificationChannel(channel)
 
         val notificationId = arguments["notificationId"] as Int
-        val category = arguments["category"] as String?
+        val category = arguments["category"] as String
         val smallIconString = arguments["smallIcon"] as String
 
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
-            // TODO: Anything else?
             .setSmallIcon(
                 applicationContext.resources.getIdentifier(
                     smallIconString, "drawable", applicationContext.packageName
@@ -180,7 +179,8 @@ class OngoingActivityService : LifecycleService() {
             )
         ).setStatus(ongoingActivityStatus).build().apply(this)
 
-        startForeground(notificationId, notificationBuilder.build())
+        val foregroundServiceType = arguments["foregroundServiceType"] as Int
+        startForeground(notificationId, notificationBuilder.build(), foregroundServiceType)
     }
 
     fun update(arguments: Map<String, Any>) {
@@ -188,6 +188,6 @@ class OngoingActivityService : LifecycleService() {
     }
 
     fun stop() {
-        stopForeground(true)
+        stopForeground(STOP_FOREGROUND_REMOVE)
     }
 }
