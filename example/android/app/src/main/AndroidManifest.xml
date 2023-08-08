@@ -3,7 +3,8 @@
     <uses-feature android:name="android.hardware.type.watch" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_WORKOUT" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_HEALTH" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_REMOTE_MESSAGING" />
 
     <application
         android:name="${applicationName}"
@@ -34,7 +35,7 @@
         <service
             android:name="dev.rexios.wear_ongoing_activity.OngoingActivityService"
             android:exported="false"
-            android:foregroundServiceType="workout"
+            android:foregroundServiceType="health|remoteMessaging"
             android:stopWithTask="true" />
 
         <!-- Don't delete the meta-data below.

@@ -10,7 +10,7 @@ AndroidManifest.xml
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
 <!-- Add permissions for the types specified in `foregroundServiceType` below -->
-<uses-permission android:name="android.permission.FOREGROUND_SERVICE_WORKOUT" />
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE_HEALTH" />
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE_REMOTE_MESSAGING" />
 
 <application>
@@ -18,7 +18,7 @@ AndroidManifest.xml
     <service
         android:name="dev.rexios.wear_ongoing_activity.OngoingActivityService"
         android:exported="false"
-        android:foregroundServiceType="workout|remoteMessaging|..."
+        android:foregroundServiceType="health|remoteMessaging|..."
         android:stopWithTask="true" />
     ...
 </application>
