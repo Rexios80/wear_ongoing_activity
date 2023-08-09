@@ -6,9 +6,6 @@ Create and maintain ongoing activity notifications on Wear OS
 
 AndroidManifest.xml
 ```xml
-<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-
 <!-- Add permissions for the types specified in `foregroundServiceType` below -->
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE_HEALTH" />
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE_REMOTE_MESSAGING" />
