@@ -1,5 +1,5 @@
 /// Notification categories
-/// 
+///
 /// See https://developer.android.com/reference/androidx/core/app/NotificationCompat
 /// for details
 enum NotificationCategory {

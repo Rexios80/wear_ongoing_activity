@@ -25,7 +25,7 @@ void main() async {
       ],
       parts: [
         TextPart(name: 'type', text: 'stuff'),
-        StopwatchPart(name: 'time', timeZero: DateTime.now())
+        StopwatchPart(name: 'time', timeZero: DateTime.now()),
       ],
     ),
   );

@@ -11,7 +11,7 @@ void main() {
         TimerPart(
           name: 'time',
           timeZero: DateTime.now().add(const Duration(minutes: 5)),
-        )
+        ),
       ],
     ),
   );

@@ -18,7 +18,7 @@ void main() {
       ],
       parts: [
         TextPart(name: 'type', text: 'countup'),
-        StopwatchPart(name: 'time', timeZero: DateTime.now())
+        StopwatchPart(name: 'time', timeZero: DateTime.now()),
       ],
     ),
   );
