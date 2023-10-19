@@ -9,7 +9,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  permission_handler: ^10.4.3
+  permission_handler: ^11.0.1
   wear_ongoing_activity:
     # When depending on this package from a real application you should use:
     #   wear_ongoing_activity: ^x.y.z
@@ -19,7 +19,7 @@ dependencies:
     path: ../
 
 dev_dependencies:
-  rexios_lints: ^5.0.0
+  rexios_lints: ^6.0.1
 
 flutter:
   uses-material-design: true
