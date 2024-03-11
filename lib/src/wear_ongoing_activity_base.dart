@@ -19,9 +19,9 @@ class WearOngoingActivity {
   /// - [staticIcon]: The name of the icon resource to show on the deactivated watch face
   /// - [animatedIcon]: The name of the icon resource to show on the activated watch face
   /// - [status]: The status of the ongoing activity
-  /// 
+  ///
   /// The [smallIcon] and [staticIcon] parameters are Android Resource IDs, not
-  /// Flutter assets. These files must exist in a subfolder of `android/app/src/main/res`
+  /// Flutter assets. These files must exist in a subfolder of `android/app/src/main/res`.
   static Future<void> start({
     required String channelId,
     required String channelName,
