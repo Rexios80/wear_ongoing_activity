@@ -1,3 +1,8 @@
+## 0.1.3
+- Downgrades target SDK to 33 for Play Store submissions
+- Default to `ForegroundServiceType.manifest`
+- Documentation updates
+
 ## 0.1.2
 - Formatting fixes for Flutter 3.13.0
 
