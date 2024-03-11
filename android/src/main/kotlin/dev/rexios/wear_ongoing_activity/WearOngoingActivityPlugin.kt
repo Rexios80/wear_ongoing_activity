@@ -130,7 +130,6 @@ class OngoingActivityService : LifecycleService() {
         }.build()
     }
 
-    @SuppressLint("DiscouragedApi")
     fun start(arguments: Map<String, Any>) {
         val channelId = arguments["channelId"] as String
         val channelName = arguments["channelName"] as String

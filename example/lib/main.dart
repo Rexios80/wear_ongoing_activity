@@ -13,10 +13,6 @@ void main() async {
     channelName: 'Ongoing Activity',
     notificationId: 12345,
     category: NotificationCategory.workout,
-    foregroundServiceTypes: {
-      ForegroundServiceType.health,
-      ForegroundServiceType.remoteMessaging,
-    },
     smallIcon: 'ic_launcher',
     staticIcon: 'ic_launcher',
     status: OngoingActivityStatus(

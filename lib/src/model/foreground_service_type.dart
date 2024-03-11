@@ -35,18 +35,28 @@ enum ForegroundServiceType {
   microphone(128),
 
   /// Health, wellness and fitness
+  ///
+  /// Added in SDK 34
   health(256),
 
   /// Messaging use cases which host local server to relay messages across devices
+  ///
+  /// Added in SDK 34
   remoteMessaging(512),
 
   /// See https://developer.android.com/reference/android/content/pm/ServiceInfo#FOREGROUND_SERVICE_TYPE_SYSTEM_EXEMPTED
+  ///
+  /// Added in SDK 34
   systemExempted(1024),
 
   /// See https://developer.android.com/reference/android/content/pm/ServiceInfo#FOREGROUND_SERVICE_TYPE_SHORT_SERVICE
+  ///
+  /// Added in SDK 34
   shortService(2048),
 
   /// See https://developer.android.com/reference/android/content/pm/ServiceInfo#FOREGROUND_SERVICE_TYPE_SPECIAL_USE
+  ///
+  /// Added in SDK 34
   specialUse(1073741824);
 
   /// Constructor
