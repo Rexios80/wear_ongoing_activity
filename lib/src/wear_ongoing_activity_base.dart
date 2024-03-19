@@ -48,6 +48,10 @@ class WearOngoingActivity {
         ...jsonMapEncode(status.toJson()),
       });
 
+  /// Check if an ongoing activity is running
+  static Future<bool> isOngoing() async =>
+      await _channel.invokeMethod<bool>('isOngoing') ?? false;
+
   /// Update an ongoing activity with a new status
   static Future<void> update(OngoingActivityStatus status) =>
       _channel.invokeMethod('update', jsonMapEncode(status.toJson()));

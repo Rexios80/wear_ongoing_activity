@@ -51,16 +51,14 @@ class WearOngoingActivityPlugin : FlutterPlugin, MethodCallHandler {
         channel.setMethodCallHandler(null)
     }
 
-    @Suppress("UNCHECKED_CAST")
     override fun onMethodCall(call: MethodCall, result: Result) {
         when (call.method) {
-            "start" -> ongoingActivityService!!.start(call.arguments as Map<String, Any>)
-            "update" -> ongoingActivityService!!.update(call.arguments as Map<String, Any>)
+            "start" -> ongoingActivityService!!.start(call, result)
+            "isOngoing" -> ongoingActivityService!!.isOngoing(call, result)
+            "update" -> ongoingActivityService!!.update(call, result)
             "stop" -> ongoingActivityService!!.stop()
             else -> return result.notImplemented()
         }
-
-        result.success(null)
     }
 }
 
@@ -130,7 +128,10 @@ class OngoingActivityService : LifecycleService() {
         }.build()
     }
 
-    fun start(arguments: Map<String, Any>) {
+    @Suppress("UNCHECKED_CAST")
+    @SuppressLint("DiscouragedApi")
+    fun start(call: MethodCall, result: Result) {
+        val arguments = call.arguments as Map<String, Any>
         val channelId = arguments["channelId"] as String
         val channelName = arguments["channelName"] as String
         val channel = NotificationChannel(
@@ -142,12 +143,12 @@ class OngoingActivityService : LifecycleService() {
         val category = arguments["category"] as String
         val smallIconString = arguments["smallIcon"] as String
 
-        val notificationBuilder = NotificationCompat.Builder(this, channelId)
-            .setSmallIcon(
-                applicationContext.resources.getIdentifier(
-                    smallIconString, "drawable", applicationContext.packageName
-                )
-            ).setCategory(category).setOngoing(true)
+
+        val notificationBuilder = NotificationCompat.Builder(this, channelId).setSmallIcon(
+            applicationContext.resources.getIdentifier(
+                smallIconString, "drawable", applicationContext.packageName
+            )
+        ).setCategory(category).setOngoing(true)
 
         val ongoingActivityStatus = createStatus(arguments)
 
@@ -180,10 +181,19 @@ class OngoingActivityService : LifecycleService() {
 
         val foregroundServiceType = arguments["foregroundServiceType"] as Int
         startForeground(notificationId, notificationBuilder.build(), foregroundServiceType)
+
+        result.success(null)
     }
 
-    fun update(arguments: Map<String, Any>) {
+    fun isOngoing(call: MethodCall, result: Result) {
+        result.success(OngoingActivity.recoverOngoingActivity(this) != null)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    fun update(call: MethodCall, result: Result) {
+        val arguments = call.arguments as Map<String, Any>
         OngoingActivity.recoverOngoingActivity(this)!!.update(this, createStatus(arguments))
+        result.success(null)
     }
 
     fun stop() {
