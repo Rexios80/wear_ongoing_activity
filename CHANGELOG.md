@@ -1,3 +1,7 @@
+## 0.1.4
+- Adds `isOngoing` method to check if an activity is running
+- Updates example
+
 ## 0.1.3+1
 - README updates
 

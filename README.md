@@ -27,8 +27,8 @@ Make sure to request notification permission before starting an activity
 ```dart
 import 'package:permission_handler/permission_handler.dart';
 
-void main() async {
-  await Permission.notification.request();
+void main() {
+  Permission.notification.request();
 }
 
 ```
@@ -67,8 +67,13 @@ Update an activity
 ```dart
 import 'package:wear_ongoing_activity/wear_ongoing_activity.dart';
 
-void main() {
-  WearOngoingActivity.update(
+void main() async {
+  if (!await WearOngoingActivity.isOngoing()) {
+    // Attempting to update an activity that is not ongoing will throw an error
+    return;
+  }
+
+  await WearOngoingActivity.update(
     OngoingActivityStatus(
       templates: [
         '#type#: #time#',
