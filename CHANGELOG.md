@@ -1,3 +1,6 @@
+## 0.1.4+1
+- README updates
+
 ## 0.1.3
 - Downgrades target SDK to 33 for Play Store submissions
 - Default to `ForegroundServiceType.manifest`

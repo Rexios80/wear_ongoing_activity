@@ -46,10 +46,6 @@ void main() {
     channelName: 'Ongoing Activity',
     notificationId: 12345,
     category: NotificationCategory.workout,
-    foregroundServiceTypes: {
-      ForegroundServiceType.health,
-      ForegroundServiceType.remoteMessaging,
-    },
     smallIcon: 'ic_launcher',
     staticIcon: 'ic_launcher',
     status: OngoingActivityStatus(
@@ -58,11 +54,12 @@ void main() {
       ],
       parts: [
         TextPart(name: 'type', text: 'countup'),
-        StopwatchPart(name: 'time', timeZero: DateTime.now())
+        StopwatchPart(name: 'time', timeZero: DateTime.now()),
       ],
     ),
   );
 }
+
 ```
 
 Update an activity
@@ -81,7 +78,7 @@ void main() {
         TimerPart(
           name: 'time',
           timeZero: DateTime.now().add(const Duration(minutes: 5)),
-        )
+        ),
       ],
     ),
   );
