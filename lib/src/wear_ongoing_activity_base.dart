@@ -53,6 +53,11 @@ class WearOngoingActivity {
       await _channel.invokeMethod<bool>('isOngoing') ?? false;
 
   /// Update an ongoing activity with a new status
+  ///
+  /// Attempting to update an ongoing activity that is not running will throw
+  /// an error. Use [isOngoing] to check if the activity is running before
+  /// calling this method. The first start of an ongoing activity may take a
+  /// while, so do not assume it is running immediately after calling [start].
   static Future<void> update(OngoingActivityStatus status) =>
       _channel.invokeMethod('update', jsonMapEncode(status.toJson()));
 

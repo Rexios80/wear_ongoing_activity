@@ -1,7 +1,12 @@
 import 'package:wear_ongoing_activity/wear_ongoing_activity.dart';
 
-void main() {
-  WearOngoingActivity.update(
+void main() async {
+  if (!await WearOngoingActivity.isOngoing()) {
+    // Attempting to update an activity that is not ongoing will throw an error
+    return;
+  }
+
+  await WearOngoingActivity.update(
     OngoingActivityStatus(
       templates: [
         '#type#: #time#',
