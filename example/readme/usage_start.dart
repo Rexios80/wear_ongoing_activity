@@ -6,7 +6,9 @@ void main() {
     channelName: 'Ongoing Activity',
     notificationId: 12345,
     category: NotificationCategory.workout,
+    // This must be a file in `android/app/src/main/res/drawable`
     smallIcon: 'ic_launcher',
+    // This must be a file in `android/app/src/main/res/drawable`
     staticIcon: 'ic_launcher',
     status: OngoingActivityStatus(
       templates: [

@@ -1,6 +1,6 @@
 name: wear_ongoing_activity
 description: Create and maintain ongoing activity notifications on Wear OS
-version: 0.1.4
+version: 0.1.4+1
 homepage: https://github.com/Rexios80/wear_ongoing_activity
 
 environment:
