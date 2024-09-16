@@ -67,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
 
-    Permission.notification.request();
+    [Permission.notification, Permission.sensors].request();
   }
 
   @override

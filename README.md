@@ -5,9 +5,11 @@ Create and maintain ongoing activity notifications on Wear OS
 ## Getting Started
 
 AndroidManifest.xml
+
 ```xml
 <!-- Add permissions for the types specified in `foregroundServiceType` below -->
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE_HEALTH" />
+<uses-permission android:name="android.permission.BODY_SENSORS" />
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE_REMOTE_MESSAGING" />
 
 <application>
@@ -21,14 +23,15 @@ AndroidManifest.xml
 </application>
 ```
 
-Make sure to request notification permission before starting an activity
+Make sure to request notification permission before starting an activity. Also request any permissions required for the specified `foregroundServiceTypes`.
 
 <!-- embedme example/readme/getting_started.dart -->
+
 ```dart
 import 'package:permission_handler/permission_handler.dart';
 
 void main() {
-  Permission.notification.request();
+  [Permission.notification, Permission.sensors].request();
 }
 
 ```
@@ -36,7 +39,9 @@ void main() {
 ## Usage
 
 Start an activity
+
 <!-- embedme example/readme/usage_start.dart -->
+
 ```dart
 import 'package:wear_ongoing_activity/wear_ongoing_activity.dart';
 
@@ -65,7 +70,9 @@ void main() {
 ```
 
 Update an activity
+
 <!-- embedme example/readme/usage_update.dart -->
+
 ```dart
 import 'package:wear_ongoing_activity/wear_ongoing_activity.dart';
 
@@ -94,7 +101,9 @@ void main() async {
 ```
 
 Stop an activity
+
 <!-- embedme example/readme/usage_stop.dart -->
+
 ```dart
 import 'package:wear_ongoing_activity/wear_ongoing_activity.dart';
 
