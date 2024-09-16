@@ -41,19 +41,15 @@ class _MyHomePageState extends State<MyHomePage> {
       staticIcon: 'ic_launcher',
       status: _status,
     );
-  }
 
-  void _update() async {
-    setState(() => _counter++);
-
-    _updateTimer?.cancel();
     _updateTimer = Timer.periodic(
       const Duration(seconds: 1),
       (timer) async {
+        setState(() => _counter++);
+
         // If the activity is not started yet, return and try again later
         if (!await WearOngoingActivity.isOngoing()) return;
         unawaited(WearOngoingActivity.update(_status));
-        _updateTimer?.cancel();
       },
     );
   }
@@ -61,6 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void _stop() {
     setState(() => _ongoing = false);
     WearOngoingActivity.stop();
+    _updateTimer?.cancel();
   }
 
   @override
@@ -73,27 +70,23 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            '$_counter',
-            style: Theme.of(context).textTheme.headlineMedium,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (_ongoing)
-                IconButton(icon: const Icon(Icons.stop), onPressed: _stop)
-              else
-                IconButton(
-                  icon: const Icon(Icons.play_arrow),
-                  onPressed: _start,
-                ),
-              IconButton(icon: const Icon(Icons.add), onPressed: _update),
-            ],
-          ),
-        ],
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              '$_counter',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            if (_ongoing)
+              IconButton(icon: const Icon(Icons.stop), onPressed: _stop)
+            else
+              IconButton(
+                icon: const Icon(Icons.play_arrow),
+                onPressed: _start,
+              ),
+          ],
+        ),
       ),
     );
   }
