@@ -21,20 +21,26 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 
-class WearOngoingActivityPlugin : FlutterPlugin, MethodCallHandler {
+class WearOngoingActivityPlugin :
+    FlutterPlugin,
+    MethodCallHandler {
     private lateinit var channel: MethodChannel
 
     private var ongoingActivityService: OngoingActivityService? = null
-    private val ongoingActivityServiceConnection = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName, service: IBinder) {
-            val binder = service as OngoingActivityService.LocalBinder
-            ongoingActivityService = binder.ongoingActivityService
-        }
+    private val ongoingActivityServiceConnection =
+        object : ServiceConnection {
+            override fun onServiceConnected(
+                name: ComponentName,
+                service: IBinder,
+            ) {
+                val binder = service as OngoingActivityService.LocalBinder
+                ongoingActivityService = binder.ongoingActivityService
+            }
 
-        override fun onServiceDisconnected(name: ComponentName) {
-            ongoingActivityService = null
+            override fun onServiceDisconnected(name: ComponentName) {
+                ongoingActivityService = null
+            }
         }
-    }
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "wear_ongoing_activity")
@@ -43,7 +49,9 @@ class WearOngoingActivityPlugin : FlutterPlugin, MethodCallHandler {
         val context = flutterPluginBinding.applicationContext
         val serviceIntent = Intent(context, OngoingActivityService::class.java)
         context.bindService(
-            serviceIntent, ongoingActivityServiceConnection, Context.BIND_AUTO_CREATE
+            serviceIntent,
+            ongoingActivityServiceConnection,
+            Context.BIND_AUTO_CREATE,
         )
     }
 
@@ -51,7 +59,10 @@ class WearOngoingActivityPlugin : FlutterPlugin, MethodCallHandler {
         channel.setMethodCallHandler(null)
     }
 
-    override fun onMethodCall(call: MethodCall, result: Result) {
+    override fun onMethodCall(
+        call: MethodCall,
+        result: Result,
+    ) {
         when (call.method) {
             "start" -> ongoingActivityService!!.start(call, result)
             "isOngoing" -> ongoingActivityService!!.isOngoing(call, result)
@@ -88,96 +99,125 @@ class OngoingActivityService : LifecycleService() {
         val templates = arguments["templates"] as List<String>
         val parts = arguments["parts"] as List<Map<String, Any>>
 
-        return Status.Builder().apply {
-            for (template in templates) {
-                addTemplate(template)
-            }
-            for (part in parts) {
-                val type = part["type"]
-                val name = part["name"] as String
-                val statusPart = when (type) {
-                    "text" -> Status.TextPart(part["text"] as String)
-                    "timer", "stopwatch" -> {
-                        val bootMillis = System.currentTimeMillis() - SystemClock.elapsedRealtime()
-
-                        val timeZeroMillis = part["timeZeroMillis"] as Long - bootMillis
-                        val pausedAtMillis =
-                            (part["pausedAtMillis"] as Long?)?.minus(bootMillis) ?: -1
-                        val totalDurationMillis =
-                            (part["totalDurationMillis"] as Long?)?.minus(bootMillis) ?: -1
-
+        return Status
+            .Builder()
+            .apply {
+                for (template in templates) {
+                    addTemplate(template)
+                }
+                for (part in parts) {
+                    val type = part["type"]
+                    val name = part["name"] as String
+                    val statusPart =
                         when (type) {
+                            "text" -> Status.TextPart(part["text"] as String)
+                            "timer", "stopwatch" -> {
+                                val bootMillis =
+                                    System.currentTimeMillis() - SystemClock.elapsedRealtime()
 
-                            "timer" -> Status.TimerPart(
-                                timeZeroMillis, pausedAtMillis, totalDurationMillis
-                            )
+                                val timeZeroMillis = part["timeZeroMillis"] as Long - bootMillis
+                                val pausedAtMillis =
+                                    (part["pausedAtMillis"] as Long?)?.minus(bootMillis) ?: -1
+                                val totalDurationMillis =
+                                    (part["totalDurationMillis"] as Long?)?.minus(bootMillis) ?: -1
 
-                            "stopwatch" -> Status.StopwatchPart(
-                                timeZeroMillis, pausedAtMillis, totalDurationMillis
-                            )
+                                when (type) {
+                                    "timer" ->
+                                        Status.TimerPart(
+                                            timeZeroMillis,
+                                            pausedAtMillis,
+                                            totalDurationMillis,
+                                        )
+
+                                    "stopwatch" ->
+                                        Status.StopwatchPart(
+                                            timeZeroMillis,
+                                            pausedAtMillis,
+                                            totalDurationMillis,
+                                        )
+
+                                    else -> throw IllegalArgumentException("Unknown type: $type")
+                                }
+                            }
 
                             else -> throw IllegalArgumentException("Unknown type: $type")
                         }
-                    }
 
-                    else -> throw IllegalArgumentException("Unknown type: $type")
+                    addPart(name, statusPart)
                 }
-
-                addPart(name, statusPart)
-            }
-        }.build()
+            }.build()
     }
 
     @Suppress("UNCHECKED_CAST")
     @SuppressLint("DiscouragedApi")
-    fun start(call: MethodCall, result: Result) {
+    fun start(
+        call: MethodCall,
+        result: Result,
+    ) {
         val arguments = call.arguments as Map<String, Any>
         val channelId = arguments["channelId"] as String
         val channelName = arguments["channelName"] as String
-        val channel = NotificationChannel(
-            channelId, channelName, NotificationManager.IMPORTANCE_DEFAULT
-        )
+        val channel =
+            NotificationChannel(
+                channelId,
+                channelName,
+                NotificationManager.IMPORTANCE_DEFAULT,
+            )
         notificationManager.createNotificationChannel(channel)
 
         val notificationId = arguments["notificationId"] as Int
         val category = arguments["category"] as String
         val smallIconString = arguments["smallIcon"] as String
 
-
-        val notificationBuilder = NotificationCompat.Builder(this, channelId).setSmallIcon(
-            applicationContext.resources.getIdentifier(
-                smallIconString, "drawable", applicationContext.packageName
-            )
-        ).setCategory(category).setOngoing(true)
+        val notificationBuilder =
+            NotificationCompat
+                .Builder(this, channelId)
+                .setSmallIcon(
+                    applicationContext.resources.getIdentifier(
+                        smallIconString,
+                        "drawable",
+                        applicationContext.packageName,
+                    ),
+                ).setCategory(category)
+                .setOngoing(true)
 
         val ongoingActivityStatus = createStatus(arguments)
 
         val staticIconString = arguments["staticIcon"] as String
         val animatedIconString = arguments["animatedIcon"] as String?
 
-        OngoingActivity.Builder(
-            this, notificationId, notificationBuilder
-        ).setStaticIcon(
-            applicationContext.resources.getIdentifier(
-                staticIconString, "drawable", applicationContext.packageName
-            )
-        ).apply {
-            if (animatedIconString != null) {
-                setAnimatedIcon(
-                    applicationContext.resources.getIdentifier(
-                        animatedIconString, "drawable", applicationContext.packageName
-                    )
-                )
-            }
-        }.setTouchIntent(
-            // Open this app
-            PendingIntent.getActivity(
+        OngoingActivity
+            .Builder(
                 this,
-                0,
-                applicationContext.packageManager.getLaunchIntentForPackage(applicationContext.packageName),
-                PendingIntent.FLAG_IMMUTABLE
-            )
-        ).setStatus(ongoingActivityStatus).build().apply(this)
+                notificationId,
+                notificationBuilder,
+            ).setStaticIcon(
+                applicationContext.resources.getIdentifier(
+                    staticIconString,
+                    "drawable",
+                    applicationContext.packageName,
+                ),
+            ).apply {
+                if (animatedIconString != null) {
+                    setAnimatedIcon(
+                        applicationContext.resources.getIdentifier(
+                            animatedIconString,
+                            "drawable",
+                            applicationContext.packageName,
+                        ),
+                    )
+                }
+            }.setTouchIntent(
+                // Open this app
+                PendingIntent.getActivity(
+                    this,
+                    0,
+                    applicationContext.packageManager.getLaunchIntentForPackage(applicationContext.packageName),
+                    PendingIntent.FLAG_IMMUTABLE,
+                ),
+            ).setStatus(ongoingActivityStatus)
+            .build()
+            .apply(this)
 
         val foregroundServiceType = arguments["foregroundServiceType"] as Int
         startForeground(notificationId, notificationBuilder.build(), foregroundServiceType)
@@ -185,12 +225,18 @@ class OngoingActivityService : LifecycleService() {
         result.success(null)
     }
 
-    fun isOngoing(call: MethodCall, result: Result) {
+    fun isOngoing(
+        call: MethodCall,
+        result: Result,
+    ) {
         result.success(OngoingActivity.recoverOngoingActivity(this) != null)
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun update(call: MethodCall, result: Result) {
+    fun update(
+        call: MethodCall,
+        result: Result,
+    ) {
         val arguments = call.arguments as Map<String, Any>
         OngoingActivity.recoverOngoingActivity(this)!!.update(this, createStatus(arguments))
         result.success(null)
