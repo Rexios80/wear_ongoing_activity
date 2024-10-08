@@ -30,9 +30,9 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       );
 
-  void _start() {
+  void _start() async {
     setState(() => _ongoing = true);
-    WearOngoingActivity.start(
+    await WearOngoingActivity.start(
       channelId: 'ongoing_activity',
       channelName: 'Ongoing Activity',
       notificationId: 12345,
@@ -54,9 +54,9 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void _stop() {
+  void _stop() async {
     setState(() => _ongoing = false);
-    WearOngoingActivity.stop();
+    await WearOngoingActivity.stop();
     _updateTimer?.cancel();
   }
 

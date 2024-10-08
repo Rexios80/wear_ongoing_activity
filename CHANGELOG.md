@@ -1,3 +1,7 @@
+## 0.1.5
+
+- Fixes stop call hanging forever
+
 ## 0.1.4+2
 
 - Documentation updates

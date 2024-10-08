@@ -67,7 +67,7 @@ class WearOngoingActivityPlugin :
             "start" -> ongoingActivityService!!.start(call, result)
             "isOngoing" -> ongoingActivityService!!.isOngoing(call, result)
             "update" -> ongoingActivityService!!.update(call, result)
-            "stop" -> ongoingActivityService!!.stop()
+            "stop" -> ongoingActivityService!!.stop(call, result)
             else -> return result.notImplemented()
         }
     }
@@ -242,7 +242,11 @@ class OngoingActivityService : LifecycleService() {
         result.success(null)
     }
 
-    fun stop() {
+    fun stop(
+        call: MethodCall,
+        result: Result,
+    ) {
         stopForeground(STOP_FOREGROUND_REMOVE)
+        result.success(null)
     }
 }
