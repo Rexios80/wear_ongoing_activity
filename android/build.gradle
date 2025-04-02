@@ -25,7 +25,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 35
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -47,8 +47,8 @@ android {
 
     dependencies {
         implementation "androidx.wear:wear-ongoing:1.0.0"
-        implementation "androidx.core:core-ktx:1.10.1"
-        api "androidx.lifecycle:lifecycle-service:2.6.1"
+        implementation "androidx.core:core-ktx:1.15.0"
+        api "androidx.lifecycle:lifecycle-service:2.8.7"
     }
 
     namespace "dev.rexios.wear_ongoing_activity"
