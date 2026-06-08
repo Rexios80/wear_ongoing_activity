@@ -23,7 +23,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.example.wear_ongoing_activity_example"
-    compileSdk 34
+    compileSdk 36
     ndkVersion flutter.ndkVersion
 
     compileOptions {
