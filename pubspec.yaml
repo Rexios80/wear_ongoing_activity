@@ -1,11 +1,11 @@
 name: wear_ongoing_activity
 description: Create and maintain ongoing activity notifications on Wear OS
-version: 0.1.6
+version: 0.1.7
 homepage: https://github.com/Rexios80/wear_ongoing_activity
 
 environment:
-  sdk: ^3.0.0
-  flutter: ">=3.3.0"
+  sdk: ^3.12.0
+  flutter: ">=3.44.0"
 
 dependencies:
   flutter:

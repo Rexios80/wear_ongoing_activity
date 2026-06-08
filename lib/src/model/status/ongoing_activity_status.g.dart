@@ -9,8 +9,8 @@ part of 'ongoing_activity_status.dart';
 // **************************************************************************
 
 Map<String, dynamic> _$OngoingActivityStatusToJson(
-        OngoingActivityStatus instance) =>
-    <String, dynamic>{
-      'templates': instance.templates,
-      'parts': instance.parts,
-    };
+  OngoingActivityStatus instance,
+) => <String, dynamic>{
+  'templates': instance.templates,
+  'parts': instance.parts,
+};
