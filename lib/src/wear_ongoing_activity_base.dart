@@ -34,19 +34,20 @@ class WearOngoingActivity {
     required String staticIcon,
     String? animatedIcon,
     required OngoingActivityStatus status,
-  }) =>
-      _channel.invokeMethod('start', {
-        'channelId': channelId,
-        'channelName': channelName,
-        'notificationId': notificationId,
-        'category': category.value,
-        'foregroundServiceType':
-            foregroundServiceTypes.fold(0, (v, e) => v | e.value),
-        'smallIcon': smallIcon,
-        'staticIcon': staticIcon,
-        'animatedIcon': animatedIcon,
-        ...jsonMapEncode(status.toJson()),
-      });
+  }) => _channel.invokeMethod('start', {
+    'channelId': channelId,
+    'channelName': channelName,
+    'notificationId': notificationId,
+    'category': category.value,
+    'foregroundServiceType': foregroundServiceTypes.fold(
+      0,
+      (v, e) => v | e.value,
+    ),
+    'smallIcon': smallIcon,
+    'staticIcon': staticIcon,
+    'animatedIcon': animatedIcon,
+    ...jsonMapEncode(status.toJson()),
+  });
 
   /// Check if an ongoing activity is running
   static Future<bool> isOngoing() async =>
